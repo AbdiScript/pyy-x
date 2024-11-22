@@ -1,0 +1,30 @@
+name: Python Scheduled Runner
+
+on:
+  schedule:
+    # زمان‌بندی برای اجرا در ساعت 18:55 به وقت Asia/Tehran (معادل 15:25 UTC)
+    - cron: '25 15 * * *'
+
+jobs:
+  run-python-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      # چک‌اوت کد از ریپازیتوری
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # نصب پایتون
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'  # نسخه پایتونی که نیاز داری
+
+      # نصب نیازمندی‌ها (در صورت وجود)
+      - name: Install dependencies
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      # اجرای اسکریپت پایتون
+      - name: Run Auto
+        run: python main.py
