@@ -3,7 +3,10 @@ name: Python Scheduled Runner
 on:
   schedule:
     # ساعت 19:00 به وقت Asia/Tehran (زمستان UTC+3:30 -> ساعت 15:30 UTC)
-    - cron: '34 17 * * *'
+    - cron: '34,35 17 * * *'
+    - cron: '36,37 17 * * *'
+    - cron: '38,39 17 * * *'
+    - cron: '40,41 17 * * *'
 
 jobs:
   run-python-script:
