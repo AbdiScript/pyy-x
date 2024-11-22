@@ -1,6 +1,7 @@
 name: Python Scheduled Runner
 
 on:
+  workflow_dispatch:
   repository_dispatch:
     types:
       - abdi-run
