@@ -30,8 +30,8 @@ def active_game():
     while True:
         try:
             # sample
-            response = requests.get("https://my.abdee.ir/sample_active_treasure.json", headers=header)
-            # response = requests.get("https://api.digikala.com/v1/treasure-hunt/", headers=header)
+            # response = requests.get("https://my.abdee.ir/sample_active_treasure.json", headers=header)
+            response = requests.get("https://api.digikala.com/v1/treasure-hunt/", headers=header)
             # بررسی وضعیت پاسخ
             if response.status_code == 200:
                 data = response.json()
@@ -68,8 +68,8 @@ if Project_Range == "" or not Project_Range[0].isnumeric():
     sys.exit(1)
 
 
-FROM = 1
-TO   = 2
+FROM = int(Project_Range[0])
+TO   = int(Project_Range[1])
 
 print(f"Form Page: {FROM}")
 print(f"To Page:   {TO}")
@@ -149,9 +149,9 @@ def fetch_product(product_id):
             product_data = response.json()
             sorted_images = process_images(product_data)
             if sorted_images:
-                # ocr_text = ocr(sorted_images[0])
+                ocr_text = ocr(sorted_images[0])
                 # ocr_text = ocr("https://dkstatics-public.digikala.com/digikala-products/319f22d08c9494efbc88a4756de3de3ded4d6f65_1731925489.jpg")
-                ocr_text = ocr("https://abdee.ir/right.jpg")
+                # ocr_text = ocr("https://abdee.ir/right.jpg")
                 if ocr_text != "" and is_correct(ocr_text):
                     send_to_telegram(sorted_images[0], product_id, ocr_text)
             return product_id, sorted_images
