@@ -2,8 +2,8 @@ name: Python Scheduled Runner
 
 on:
   schedule:
-    # زمان‌بندی برای اجرا در ساعت 18:55 به وقت Asia/Tehran (معادل 15:25 UTC)
-    - cron: '25 15 * * *'
+    # ساعت 19:00 به وقت Asia/Tehran (زمستان UTC+3:30 -> ساعت 15:30 UTC)
+    - cron: '30 15 * * *'
 
 jobs:
   run-python-script:
