@@ -97,13 +97,19 @@ def extract_timestamp(url):
 def ocr(image_url):
     payload = {'language': 'ara','isOverlayRequired': 'false','url': image_url,'iscreatesearchablepdf': 'false','issearchablepdfhidetextlayer': 'false'}
     response = requests.request("POST", OCR_API_URL, headers=OCR_header, data=payload)
-    if response.status_code == 200:
-        return response.json()['ParsedResults'][0]['ParsedText']
-    else:
-        print(f"🔴 🔴 OCR FAILED for {image_url}  🔴 🔴")
-        print(f"🔴 {response.text} 🔴")
-        return ""
-
+    while True:
+        if response.status_code == 200:   
+            try:
+                data = response.json()['ParsedResults'][0]['ParsedText']
+                return data
+            except Exception as e:
+                print(f"🔴 🔴 OCR FAILED for {image_url}  🔴 🔴")
+                print(f"🔴 Retrying ... 🔴")
+        else:
+            print(f"🔴 🔴 OCR FAILED for {image_url}  🔴 🔴")
+            print(f"🔴 Retrying ... 🔴")
+        time.sleep(2)
+            
 def is_correct(string):
     return any(word in string for word in ['درست', 'همينه', 'حـالا', 'حالا', 'وارد', 'كن'])
 
@@ -143,7 +149,7 @@ def fetch_product(product_id):
             product_data = response.json()
             sorted_images = process_images(product_data)
             if sorted_images:
-                ocr_text = ocr(sorted_images[0])
+                # ocr_text = ocr(sorted_images[0])
                 # ocr_text = ocr("https://dkstatics-public.digikala.com/digikala-products/319f22d08c9494efbc88a4756de3de3ded4d6f65_1731925489.jpg")
                 ocr_text = ocr("https://abdee.ir/right.jpg")
                 if ocr_text != "" and is_correct(ocr_text):
