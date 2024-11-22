@@ -6,8 +6,12 @@ import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 # from fake_useragent import UserAgent
 # ua = UserAgent(browsers=['edge', 'chrome'])
-# XXXXX
-Project_ID = "1"
+
+response = requests.get('https://api64.ipify.org?format=json')
+ip_address = response.json().get('ip')
+print(f"Public IP Address: {ip_address}")
+
+Project_ID = "1" #  change this
 
 TELEGRAM_BOT_TOKENS = [
     "7306877915:AAHR-EDl87kj1eiLVWUxyiHnaQoiJUTW8Fc",
