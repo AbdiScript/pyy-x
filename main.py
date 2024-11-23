@@ -58,7 +58,8 @@ print(f"🟢🟢🟢 Active Treasure: {Active_Game} 🟢🟢🟢")
 BASE_URL   = f"https://api.digikala.com/v1/categories/{Active_Game}/search/?page="
 PRODUCT_URL_TEMPLATE = "https://api.digikala.com/v2/product/{}/"
 Project_Range = requests.get(f"https://my.abdee.ir/?action=get_range&for={Project_ID}") #10-20
-Project_Range = Project_Range.text.split("-")
+Range_text    = Project_Range.text
+Project_Range = Range_text.split("-")
 
 
 
@@ -69,7 +70,7 @@ if Project_Range == "" or not Project_Range[0].isnumeric():
 
 
 FROM = int(Project_Range[0])
-TO   = int(Project_Range[1])
+TO   = int(Project_Range[1]) + 1
 
 print(f"Form Page: {FROM}")
 print(f"To Page:   {TO}")
@@ -95,7 +96,7 @@ def extract_timestamp(url):
     return 0
 
 def ocr(image_url):
-    payload = {'language': 'ara','isOverlayRequired': 'false','url': image_url,'iscreatesearchablepdf': 'false','issearchablepdfhidetextlayer': 'false'}
+    payload = {'filetype': 'jpg','language': 'ara','isOverlayRequired': 'false','url': image_url,'iscreatesearchablepdf': 'false','issearchablepdfhidetextlayer': 'false'}
     response = requests.request("POST", OCR_API_URL, headers=OCR_header, data=payload)
     while True:
         if response.status_code == 200:   
@@ -104,11 +105,14 @@ def ocr(image_url):
                 return data
             except Exception as e:
                 print(f"🔴 🔴 OCR FAILED for {image_url}  🔴 🔴")
+                print(f"🔴 🔴 Error: {e}  🔴 🔴")
+                print(f"🔴 🔴 {response.text}  🔴 🔴")
                 print(f"🔴 Retrying ... 🔴")
         else:
             print(f"🔴 🔴 OCR FAILED for {image_url}  🔴 🔴")
             print(f"🔴 Retrying ... 🔴")
-        time.sleep(2)
+            print(f"🔴 🔴 {response.text}  🔴 🔴")
+        time.sleep(1)
             
 def is_correct(string):
     return any(word in string for word in ['درست', 'همينه', 'حـالا', 'حالا', 'وارد', 'كن'])
@@ -225,3 +229,6 @@ end_time = time.time()
 time_taken = end_time - start_time
 
 print("Time taken:", time_taken, "seconds")
+
+#update result
+requests.get(f"https://my.abdee.ir/?action=log&range={Range_text}&result={len(all_product_ids)}&time={time_taken}")
